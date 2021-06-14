@@ -9,9 +9,6 @@ import { StopTrainingComponent } from '../stop-training/stop-training.component'
 })
 export class CurrentTrainingComponent implements OnInit {
 
-  // @Output()
-  // exitTraining = new EventEmitter();
-
   progress:number=0;
   timer:number;
 
@@ -29,7 +26,6 @@ export class CurrentTrainingComponent implements OnInit {
       this.progress=this.progress +5
       if(this.progress>=100){
         clearInterval(this.timer);
-        //this.onStopTraining();
       }
 
   },1000);
@@ -37,7 +33,7 @@ export class CurrentTrainingComponent implements OnInit {
 
   onStopTraining(){
 
-    clearInterval(this.timer);
+    clearInterval(this.timer);//it somehow pauses the interval.
 
     const dialogRef = this.dialog.open(StopTrainingComponent,{data:{
       progress:this.progress
