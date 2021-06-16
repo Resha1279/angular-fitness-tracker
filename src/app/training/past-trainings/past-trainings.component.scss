@@ -1,0 +1,28 @@
+table{
+  background-color: blanchedalmond;
+}
+
+div{
+  background-color: aquamarine;
+}
+
+
+.duration{
+  color: grey;
+}
+
+.row{
+  border-radius: 5rem;
+  width: 90%;
+  margin: auto;
+  display: grid;
+  grid-template-columns: 1fr 2fr 1fr 1fr 1fr;
+}
+
+.completed{
+  color:green
+}
+
+// .cancelled{
+//   color:red
+// }

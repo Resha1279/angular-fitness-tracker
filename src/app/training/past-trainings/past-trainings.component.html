@@ -1,1 +1,33 @@
-<p>past-trainings works!</p>
+<mat-table [dataSource]="dataSource" fxFlex>
+  <ng-container matColumnDef="name">
+    <mat-cell *matCellDef="let item">{{ item.name }}</mat-cell>
+  </ng-container>
+
+  <ng-container matColumnDef="duration">
+    <mat-cell class="duration" *matCellDef="let item"
+      >{{ item.duration }}s</mat-cell
+    >
+  </ng-container>
+  <ng-container matColumnDef="calories">
+    <mat-cell *matCellDef="let item">{{ item.calories }} kcal</mat-cell>
+  </ng-container>
+  <ng-container matColumnDef="state">
+    <mat-cell
+      *matCellDef="let item"
+      [ngClass]="{
+        completed: item.state == 'completed',
+        cancelled: item.state == 'cancelled'
+      }"
+      >{{ item.state }}</mat-cell
+    >
+  </ng-container>
+
+  <ng-container matColumnDef="date">
+    <mat-cell *matCellDef="let item">{{ item.date | date }}</mat-cell>
+  </ng-container>
+
+  <mat-row
+    class="row"
+    *matRowDef="let row; columns: displayedColumns"
+  ></mat-row>
+</mat-table>
