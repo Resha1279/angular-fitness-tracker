@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { AngularFirestore } from '@angular/fire/firestore';
 import { map } from 'rxjs/operators';
-import { Observable } from 'rxjs';
+import { Observable, Subscription } from 'rxjs';
 
 import { Subject } from 'rxjs';
 import { Exercise } from './exercise.model'
@@ -11,8 +11,10 @@ import { Exercise } from './exercise.model'
 })
 export class TrainingService {
 
+  private firebaseSubscriptions: Subscription[] = []
+
   exerciseSelected = new Subject<Exercise>()//when user selects exercise in the dropdown
-  exercisesChanged = new Subject<Exercise[]>()//exercises populated in the dropdown when new-training component initializes
+  exercisesChanged = new Subject<Exercise[]>();//exercises populated in the dropdown when new-training component initializes
   exerciseHistoryChanged = new Subject<Exercise[]>()//after user completes or cancels exercise the exercise is populated to database and that data is received here from the database
   exerciseHistory: Exercise[] = []//the exercise that user has completed or canceled. it is of type Exercise array (Exercise[] changes the type Exercise to Exercise array) which is initially set to empty by =[] sign.
 
@@ -24,21 +26,23 @@ export class TrainingService {
 
 
   fetchAvailableExercises() {
-    this.firestore.collection<Exercise>('AvailableExercises')
-      .snapshotChanges()
-      .pipe(map(docArray => {
+    this.firebaseSubscriptions.push(
+      this.firestore.collection<Exercise>('AvailableExercises')
+        .snapshotChanges()
+        .pipe(map(docArray => {
 
-        return docArray.map(doc => {
-          const data = doc.payload.doc.data()
-          const id = doc.payload.doc.id
+          return docArray.map(doc => {
+            const data = doc.payload.doc.data()
+            const id = doc.payload.doc.id
 
-          return { id, ...data }
+            return { id, ...data }
+          })
+        }))
+        .subscribe((exercises: Exercise[]) => {
+          this.availableExercises = exercises
+          this.exercisesChanged.next([...this.availableExercises])
         })
-      }))
-      .subscribe((exercises: Exercise[]) => {
-        this.availableExercises = exercises
-        this.exercisesChanged.next([...this.availableExercises])
-      })
+    )
   }
 
 
@@ -81,16 +85,26 @@ export class TrainingService {
   }
 
   fetchCompletedOrCancelledExercises() {
-    this.firestore
-      .collection('ExerciseHistory')
-      .valueChanges()
-      .subscribe((exercises: Exercise[]) => {
-        this.exerciseHistoryChanged.next(exercises)
-      })
+    this.firebaseSubscriptions.push(
+      this.firestore
+        .collection('ExerciseHistory')
+        .valueChanges()
+        .subscribe((exercises: Exercise[]) => {
+          this.exerciseHistoryChanged.next(exercises)
+        })
+    )
   }
 
   private addDataToDatabase(exercise: Exercise) {
     this.firestore.collection('ExerciseHistory').add(exercise)
+  }
+
+
+
+  cancelSubscriptions() {
+    this.firebaseSubscriptions.forEach(subs => {
+      subs.unsubscribe()
+    })
   }
 
 }

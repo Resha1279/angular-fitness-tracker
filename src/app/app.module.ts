@@ -21,6 +21,7 @@ import { SidenavListComponent } from './navigation/sidenav-list/sidenav-list.com
 import { StopTrainingComponent } from './training/stop-training/stop-training.component'
 import { TrainingService } from './training/training.service'
 import { AuthService } from './auth/auth.service';
+import { UIService } from './shared/ui.service'
 import { environment } from 'src/environments/environment';
 
 
@@ -48,7 +49,7 @@ import { environment } from 'src/environments/environment';
     AngularFirestoreModule,
     AngularFireAuthModule,
   ],
-  providers: [TrainingService, AuthService],
+  providers: [TrainingService, AuthService, UIService],
   bootstrap: [AppComponent],
   entryComponents: [StopTrainingComponent]//because this component is not called from router or template.
 })

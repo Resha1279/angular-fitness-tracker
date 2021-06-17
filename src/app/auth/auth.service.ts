@@ -3,7 +3,9 @@ import { User } from './user.model'
 import { AuthData } from './auth-data.model'
 import { Subject } from 'rxjs';
 import { Router } from '@angular/router';
-import { AngularFireAuth } from '@angular/fire/auth';
+import { AngularFireAuth, } from '@angular/fire/auth';
+import { TrainingService } from '../training/training.service';
+import { MatSnackBar } from '@angular/material/snack-bar';
 
 
 @Injectable({
@@ -15,7 +17,34 @@ export class AuthService {
 
   private isAuthenticated = false;
 
-  constructor(private router: Router, private angularFireAuth: AngularFireAuth) { }
+  constructor(
+    private router: Router,
+    private angularFireAuth: AngularFireAuth,
+    private trainingService: TrainingService,
+    private snackbar: MatSnackBar) { }
+
+
+
+
+  initAuthListener() {
+    this.angularFireAuth.authState.subscribe(user => {
+      if (user) {
+        console.log(user)
+        this.isAuthenticated = true
+        this.authChange.next(true)
+        this.router.navigate(['/training'])
+      } else {
+        this.trainingService.cancelSubscriptions()
+
+        this.authChange.next(false)//used just like event emitter .next() instead of .emit()
+        this.router.navigate(['/login'])
+        this.isAuthenticated = false
+      }
+    })
+  }
+
+
+
 
 
   registerUser(authData: AuthData) {
@@ -25,9 +54,11 @@ export class AuthService {
       authData.password
     ).then(result => {
       console.log(result)
-      this.authSuccessfully()
     }).catch(error => {
-      console.log(error)
+      this.snackbar.open(error.message, null, {
+        duration: 5000,
+        verticalPosition: 'top'
+      })
     })
 
 
@@ -39,24 +70,18 @@ export class AuthService {
       authData.password
     ).then(result => {
       console.log(result)
-      this.authSuccessfully()
     }).catch(error => {
-      console.log(error)
+      this.snackbar.open(error.message, null, {
+        duration: 5000,
+        verticalPosition: 'top'
+      })
     })
   }
 
   logout() {
-    this.isAuthenticated = false
 
-    this.authChange.next(false)//used just like event emitter .next() instead of .emit()
+    this.angularFireAuth.signOut()
 
-    this.router.navigate(['/login'])
-  }
-
-  authSuccessfully() {
-    this.authChange.next(true)
-    this.router.navigate(['/training'])
-    this.isAuthenticated = true
   }
 
 
