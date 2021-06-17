@@ -1,0 +1,11 @@
+{
+  "targets": {
+    "myfitness-569c8": {
+      "hosting": {
+        "fitness-tracker": [
+          "myfitness-569c8"
+        ]
+      }
+    }
+  }
+}
