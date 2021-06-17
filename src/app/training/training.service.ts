@@ -5,6 +5,8 @@ import { Observable, Subscription } from 'rxjs';
 
 import { Subject } from 'rxjs';
 import { Exercise } from './exercise.model'
+import { UIService } from '../shared/ui.service';
+
 
 @Injectable({
   providedIn: 'root'
@@ -22,10 +24,14 @@ export class TrainingService {
 
   private runningExercise: Exercise
 
-  constructor(private firestore: AngularFirestore) { }
+  constructor(private firestore: AngularFirestore,
+    private uiService: UIService
+  ) { }
 
 
   fetchAvailableExercises() {
+    this.uiService.loadingState.next(true)
+
     this.firebaseSubscriptions.push(
       this.firestore.collection<Exercise>('AvailableExercises')
         .snapshotChanges()
@@ -41,6 +47,8 @@ export class TrainingService {
         .subscribe((exercises: Exercise[]) => {
           this.availableExercises = exercises
           this.exercisesChanged.next([...this.availableExercises])
+          this.uiService.loadingState.next(false)
+
         })
     )
   }
