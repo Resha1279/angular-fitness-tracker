@@ -31,13 +31,21 @@
       </mat-card-content>
       <mat-card-actions>
         <button
-          *ngIf="!isLoading"
+          *ngIf="!isLoading && exercises"
           type="submit"
           mat-flat-button
           color="accent"
           [disabled]="f.invalid"
         >
           Start
+        </button>
+
+        <button
+          type="button"
+          *ngIf="!isLoading && !exercises"
+          (click)="fetchExercises()"
+        >
+          Reload
         </button>
       </mat-card-actions>
     </mat-card>

@@ -5,7 +5,6 @@ import { Subject } from 'rxjs';
 import { Router } from '@angular/router';
 import { AngularFireAuth, } from '@angular/fire/auth';
 import { TrainingService } from '../training/training.service';
-import { MatSnackBar } from '@angular/material/snack-bar';
 import { UIService } from '../shared/ui.service';
 
 
@@ -22,7 +21,6 @@ export class AuthService {
     private router: Router,
     private angularFireAuth: AngularFireAuth,
     private trainingService: TrainingService,
-    private snackbar: MatSnackBar,
     private uiService: UIService
   ) { }
 
@@ -59,10 +57,8 @@ export class AuthService {
       this.uiService.loadingState.next(false)
     }).catch(error => {
       this.uiService.loadingState.next(false)
-      this.snackbar.open(error.message, null, {
-        duration: 5000,
-        verticalPosition: 'top'
-      })
+      this.uiService.showSnackbar(error.message, null, 5000, 'top')
+
     })
 
 
@@ -77,10 +73,7 @@ export class AuthService {
       this.uiService.loadingState.next(false)
     }).catch(error => {
       this.uiService.loadingState.next(false)
-      this.snackbar.open(error.message, null, {
-        duration: 5000,
-        verticalPosition: 'top'
-      })
+      this.uiService.showSnackbar(error.message, null, 5000, 'top')
     })
   }
 
