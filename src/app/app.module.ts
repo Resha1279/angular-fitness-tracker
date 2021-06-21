@@ -18,6 +18,8 @@ import { UIService } from './shared/ui.service'
 import { environment } from 'src/environments/environment';
 import { AuthModule } from './auth/auth.module'
 import { TrainingModule } from './training/training.module';
+import { StoreModule } from '@ngrx/store';
+import { appReducer } from './app.reducer';
 
 
 
@@ -37,6 +39,7 @@ import { TrainingModule } from './training/training.module';
     AngularFirestoreModule,
     AuthModule,
     TrainingModule,
+    StoreModule.forRoot({ ui: appReducer })
 
   ],
   providers: [TrainingService, AuthService, UIService],
