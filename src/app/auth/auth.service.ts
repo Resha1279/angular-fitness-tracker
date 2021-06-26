@@ -1,11 +1,13 @@
 import { Injectable } from '@angular/core';
-import { User } from './user.model'
 import { AuthData } from './auth-data.model'
-import { Subject } from 'rxjs';
 import { Router } from '@angular/router';
 import { AngularFireAuth, } from '@angular/fire/auth';
 import { TrainingService } from '../training/training.service';
 import { UIService } from '../shared/ui.service';
+import { Store } from '@ngrx/store';
+import * as fromRoot from '../app.reducer';
+import * as UI from '../shared/ui.actions'
+import * as Auth from '../auth/auth.actions'
 
 
 @Injectable({
@@ -13,15 +15,12 @@ import { UIService } from '../shared/ui.service';
 })
 export class AuthService {
 
-  authChange = new Subject<boolean>()//just like eventEmitter. Other components can subscribe to this like a state and get real time change.
-
-  private isAuthenticated = false;
-
   constructor(
     private router: Router,
     private angularFireAuth: AngularFireAuth,
     private trainingService: TrainingService,
-    private uiService: UIService
+    private uiService: UIService,
+    private store: Store<fromRoot.State>
   ) { }
 
 
@@ -30,16 +29,14 @@ export class AuthService {
   initAuthListener() {
     this.angularFireAuth.authState.subscribe(user => {
       if (user) {
-        console.log(user)
-        this.isAuthenticated = true
-        this.authChange.next(true)
+        this.store.dispatch(new Auth.SetAuthenticated())
         this.router.navigate(['/training'])
       } else {
         this.trainingService.cancelSubscriptions()
 
-        this.authChange.next(false)//used just like event emitter .next() instead of .emit()
+        this.store.dispatch(new Auth.SetUnauthenticated())
+
         this.router.navigate(['/login'])
-        this.isAuthenticated = false
       }
     })
   }
@@ -49,14 +46,14 @@ export class AuthService {
 
 
   registerUser(authData: AuthData) {
-    this.uiService.loadingState.next(true)
+    this.store.dispatch(new UI.StartLoading())
     this.angularFireAuth.createUserWithEmailAndPassword(
       authData.email,
       authData.password
     ).then(result => {
-      this.uiService.loadingState.next(false)
+      this.store.dispatch(new UI.StopLoading())
     }).catch(error => {
-      this.uiService.loadingState.next(false)
+      this.store.dispatch(new UI.StopLoading())
       this.uiService.showSnackbar(error.message, null, 5000, 'top')
 
     })
@@ -65,14 +62,14 @@ export class AuthService {
   }
 
   login(authData: AuthData) {
-    this.uiService.loadingState.next(true)
+    this.store.dispatch(new UI.StartLoading())
     this.angularFireAuth.signInWithEmailAndPassword(
       authData.email,
       authData.password
     ).then(result => {
-      this.uiService.loadingState.next(false)
+      this.store.dispatch(new UI.StopLoading())
     }).catch(error => {
-      this.uiService.loadingState.next(false)
+      this.store.dispatch(new UI.StopLoading())
       this.uiService.showSnackbar(error.message, null, 5000, 'top')
     })
   }
@@ -83,9 +80,5 @@ export class AuthService {
 
   }
 
-
-  isAuth() {
-    return this.isAuthenticated
-  }
 
 }

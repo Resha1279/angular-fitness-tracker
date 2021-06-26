@@ -4,11 +4,11 @@
   </button>
   <span><a routerLink="/">My Fitness</a></span>
   <ul fxFlex fxLayoutAlign="end" fxLayoutGap="10px" fxHide.xs>
-    <li *ngIf="!isAuth">
+    <li *ngIf="!(isAuth$ | async)">
       <a routerLink="/login">Login</a>
     </li>
-    <li *ngIf="!isAuth"><a routerLink="/signup">Signup</a></li>
-    <li *ngIf="isAuth"><a routerLink="/training">Training</a></li>
-    <li (click)="onLogout()" *ngIf="isAuth"><a>Logout</a></li>
+    <li *ngIf="!(isAuth$ | async)"><a routerLink="/signup">Signup</a></li>
+    <li *ngIf="isAuth$ | async"><a routerLink="/training">Training</a></li>
+    <li (click)="onLogout()" *ngIf="isAuth$ | async"><a>Logout</a></li>
   </ul>
 </mat-toolbar>
