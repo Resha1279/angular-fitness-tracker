@@ -1,4 +1,4 @@
-import { Component, Inject, Input, OnInit } from '@angular/core';
+import { Component, Inject, OnInit } from '@angular/core';
 import { MAT_DIALOG_DATA } from '@angular/material/dialog';
 
 @Component({
@@ -9,8 +9,8 @@ import { MAT_DIALOG_DATA } from '@angular/material/dialog';
 export class StopTrainingComponent implements OnInit {
 
 
-//angular has constants like MAT_DIALOG_DATA where it somehow stores data like in this case from dialog and we can access this data using constant
-  constructor( @Inject(MAT_DIALOG_DATA) public passedData: any ) { }
+  //angular has constants like MAT_DIALOG_DATA where it somehow stores data like in this case from dialog and we can access this data using constant
+  constructor(@Inject(MAT_DIALOG_DATA) public passedData: any) { }
 
   ngOnInit() {
   }

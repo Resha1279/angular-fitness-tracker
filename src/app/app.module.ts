@@ -22,6 +22,9 @@ import { StoreModule } from '@ngrx/store';
 import { reducer } from './app.reducer';
 
 
+import { StoreDevtoolsModule } from '@ngrx/store-devtools';
+
+
 
 @NgModule({
   declarations: [
@@ -39,7 +42,12 @@ import { reducer } from './app.reducer';
     AngularFirestoreModule,
     AuthModule,
     TrainingModule,
-    StoreModule.forRoot(reducer)
+    StoreModule.forRoot(reducer),
+    StoreDevtoolsModule.instrument({
+      maxAge: 25,
+      logOnly: environment.production,
+      autoPause: true,
+    }),
 
   ],
   providers: [TrainingService, AuthService, UIService],

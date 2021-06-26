@@ -17,12 +17,6 @@
         required
         #emailInput="ngModel"
       />
-      <!-- <mat-error *ngIf="emailInput.hasError('required')"
-        >this field is required</mat-error
-      > -->
-      <!-- <mat-error *ngIf="!emailInput.hasError('required')"
-        >invalid email</mat-error
-      > -->
     </mat-form-field>
     <mat-form-field>
       <input
@@ -33,16 +27,6 @@
         name="password"
         required
       />
-      <!-- <mat-hint align="end" *ngIf="characters.value?.length <= 6"
-        >{{ characters.value?.length }}/6</mat-hint
-      > -->
-      <!-- <mat-error *ngIf="emailInput.hasError('required')"
-        >this field is required</mat-error
-      > -->
-      <!-- <mat-error *ngIf="!emailInput.hasError('required')"
-        >password must be at least 6 characters long.
-        {{ characters.value?.length }}/6</mat-error
-      > -->
     </mat-form-field>
     <button
       *ngIf="!(isLoading$ | async)"

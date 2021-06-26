@@ -1,9 +1,12 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { NgForm } from '@angular/forms';
-import { Subscription } from 'rxjs';
+import { Observable } from 'rxjs';
 import { Exercise } from '../exercise.model';
 import { TrainingService } from '../training.service';
-import { UIService } from '../../shared/ui.service';
+
+import * as fromTraining from '../training.reducer'
+import * as fromRoot from '../../app.reducer'
+import { Store } from '@ngrx/store';
 
 
 @Component({
@@ -11,28 +14,25 @@ import { UIService } from '../../shared/ui.service';
   templateUrl: './new-training.component.html',
   styleUrls: ['./new-training.component.scss']
 })
-export class NewTrainingComponent implements OnInit, OnDestroy {
+export class NewTrainingComponent implements OnInit {
 
-  exercises: Exercise[]
-  exerciseSubscription: Subscription
-  isLoading = false
-  loadingStateSubscription: Subscription
+  exercises$: Observable<Exercise[]>
+  isLoading$: Observable<boolean>
 
 
   constructor(private trainingService: TrainingService,
-    private uiService: UIService
+    private store: Store<fromTraining.State>,
   ) {
 
   }
 
   ngOnInit(): void {
-    this.loadingStateSubscription = this.uiService.loadingState.subscribe(state => {
-      this.isLoading = state
-    })
+    this.isLoading$ = this.store.select(fromRoot.getIsLoading)
+
+    this.exercises$ = this.store.select(fromTraining.getAvailableExercises)
 
     this.fetchExercises()
 
-    this.exerciseSubscription = this.trainingService.exercisesChanged.subscribe(exercises => this.exercises = exercises)
   }
 
   fetchExercises() {
@@ -42,17 +42,6 @@ export class NewTrainingComponent implements OnInit, OnDestroy {
 
   onStartTraining(f: NgForm) {
     this.trainingService.startExercise(f.value.exercise)
-  }
-
-  ngOnDestroy() {
-    if (this.exerciseSubscription) {
-
-      this.exerciseSubscription.unsubscribe()
-    }
-
-    if (this.loadingStateSubscription) {
-      this.loadingStateSubscription.unsubscribe()
-    }
   }
 
 }
