@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { AngularFirestore } from '@angular/fire/firestore';
-import { map } from 'rxjs/operators';
+import { map, take } from 'rxjs/operators';
 import { Subscription } from 'rxjs';
 import { Exercise } from './exercise.model'
 import { UIService } from '../shared/ui.service';
@@ -58,7 +58,7 @@ export class TrainingService {
 
 
   completeExercise() {
-    this.store.select(fromTraining.getActiveExerxises).subscribe(ex => {
+    this.store.select(fromTraining.getActiveExercise).pipe(take(1)).subscribe(ex => {
       this.addDataToDatabase(
         {
           ...ex,
@@ -66,14 +66,13 @@ export class TrainingService {
           state: 'completed'
         }
       )
+      this.store.dispatch(new Training.StopExercise())
+
     })
-
-
-    this.store.dispatch(new Training.StopExercise())
   }
 
   cancelExercise(progress: number) {
-    this.store.select(fromTraining.getActiveExerxises).subscribe(ex => {
+    this.store.select(fromTraining.getActiveExercise).pipe(take(1)).subscribe(ex => {
       this.addDataToDatabase(
         {
           ...ex,
@@ -84,10 +83,9 @@ export class TrainingService {
         }
       )
 
+      this.store.dispatch(new Training.StopExercise())
+
     })
-
-
-    this.store.dispatch(new Training.StopExercise())
   }
 
   fetchCompletedOrCancelledExercises() {

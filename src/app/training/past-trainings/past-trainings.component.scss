@@ -1,28 +1,55 @@
-table{
-  background-color: blanchedalmond;
-}
-
-div{
-  background-color: aquamarine;
+.name{
+font-weight: 500;
+color: #303030;
+grid-area: name;
+padding: 0;
+width: 100%;
 }
 
 
 .duration{
-  color: grey;
+ // color: grey;
+  grid-area: duration;
+  width: 100%;
 }
 
+.calories{
+  //color: grey;
+  grid-area: calories;
+  width: 100%;
+ // font-weight: 500;
+}
+
+.date{
+  color: grey;
+  font-size: small;
+  grid-area: date;
+  width: 100%;
+}
+
+
+
 .row{
-  border-radius: 5rem;
-  width: 90%;
+  width: 80%;
   margin: auto;
+  padding: 20px;
   display: grid;
-  grid-template-columns: 1fr 2fr 1fr 1fr 1fr;
+  grid-template-areas:
+  'name name name name . .'
+  'duration calories status . . .'
+  'date date date date . .';
 }
 
 .completed{
-  color:green
+  color:green;
+  grid-area: status;
+  width: 100%;
+//  font-weight: 500;
 }
 
-// .cancelled{
-//   color:red
-// }
+.cancelled{
+ // color:gray;
+  grid-area: status;
+  width: 100%;
+ // font-weight: 500;
+}

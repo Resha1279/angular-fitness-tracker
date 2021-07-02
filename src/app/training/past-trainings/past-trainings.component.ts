@@ -22,11 +22,14 @@ export class PastTrainingsComponent implements OnInit {
   ) { }
 
   ngOnInit(): void {
-    this.trainingService.fetchCompletedOrCancelledExercises()
 
     this.store.select(fromTraining.getFinishedExercises).subscribe(ex => {
       this.dataSource.data = ex;
     })
+
+
+    this.trainingService.fetchCompletedOrCancelledExercises()
+
   }
 
 }

@@ -1,15 +1,17 @@
-<mat-table [dataSource]="dataSource" fxFlex>
+<mat-table [dataSource]="dataSource">
   <ng-container matColumnDef="name">
-    <mat-cell *matCellDef="let item">{{ item.name }}</mat-cell>
+    <mat-cell class="name" *matCellDef="let item">{{ item.name }}</mat-cell>
   </ng-container>
 
   <ng-container matColumnDef="duration">
     <mat-cell class="duration" *matCellDef="let item"
-      >{{ item.duration }}s</mat-cell
+      >{{ item.duration | number: "1.0-2" }}s</mat-cell
     >
   </ng-container>
   <ng-container matColumnDef="calories">
-    <mat-cell *matCellDef="let item">{{ item.calories }} kcal</mat-cell>
+    <mat-cell class="calories" *matCellDef="let item"
+      >{{ item.calories | number: "1.0-2" }} kcal</mat-cell
+    >
   </ng-container>
   <ng-container matColumnDef="state">
     <mat-cell
@@ -23,7 +25,9 @@
   </ng-container>
 
   <ng-container matColumnDef="date">
-    <mat-cell *matCellDef="let item">{{ item?.date.toDate() | date }}</mat-cell>
+    <mat-cell class="date" *matCellDef="let item">{{
+      item?.date.toDate() | date: "EEE, MMM dd   hh:mm aa"
+    }}</mat-cell>
   </ng-container>
 
   <mat-row
